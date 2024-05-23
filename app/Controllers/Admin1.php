@@ -25,7 +25,7 @@ use \App\Models\Admin_Model;
 			$data['validation']  = $this->validator;
 			//site login 
 			if ($this->request->getMethod() == 'post') {
-				echo "METHOD=POST";
+				//echo "METHOD=POST";
 				$rules = [
 					'email'  => 'required|valid_email',
 					'password'   => 'required|min_length[4]|max_length[16]'
@@ -37,8 +37,8 @@ use \App\Models\Admin_Model;
 					$throttler = \Config\Services::throttler();
 					$allow     = $throttler->check("login", 100, MINUTE);
 					if ($allow) {
-						$userdata = $this->loginModel->verifyEmail($email, $password);											
-						echo $userdata['status'];
+						$userdata = $this->loginModel->verifyEmail($email, $password);					
+						
 						if ($userdata['status'] == 'Active') {
 							if ($userdata['level'] === '1') {
 								$loginInfo  = [
@@ -55,10 +55,9 @@ use \App\Models\Admin_Model;
 								}else{
 
 								}
-								$this->session->set('loggedin_user_all',$userdata); 
+								$this->session->set('datos_usuario',$userdata); 
 								$this->session->set('loggedin_user', $userdata['uid']);
 								$this->session->set('loggedin_username', $userdata['username']);
-
 								return redirect()->to(base_url().'/Admin');
 							}
 							else{

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Add Department</title>
+	<title>Nuevo Departamento</title>
 	<?= view('Admin/css_file.php'); ?>
 	<style type="text/css">
 		body{background: rgb(224, 227, 231)}
@@ -26,17 +26,19 @@
 <div class="container">
 	<div class="card" style="box-shadow: none;">
 		<div class="card-content" style="border-bottom: 1px solid silver;padding: 10px;">
-			<h5 style="font-weight: 500;margin-top: 5px; font-size: 20px;"><span class="fa fa-tasks"></span>&nbsp;Add Department</h5>
+			<h5 style="font-weight: 500;margin-top: 5px; font-size: 20px;">
+				<span class="fa fa-tasks" style="color: green" ></span>&nbsp;Nuevo Departamento
+			</h5>
 		</div>
-		<div class="card-content">
+		<div class="card-content">		
 			<?= form_open_multipart('Admin/upload_department'); ?>	
-				<h6>Department Name</h6>
-				<input type="text" name="department_name" value="<?= set_value('department_name'); ?>" id="input_box" placeholder="Enter Department Name">
-				<span style="color: red"><?= display_error($validation,'department_name'); ?></span>
-				<h6>Department Discription</h6>
-					<textarea name="dep_desc" placeholder="Department Discription"></textarea>
+			<h6>Nombre Departamento</h6>
+				<input type="text" name="department_name" value="<?= set_value('department_name'); ?>" id="input_box" placeholder="Ingrese Nombre del Departamento">
+				<span style="color: red"><?= display_error($validation,'department_name'); ?></span>				
+				<h6>Descripción Departamento</h6>
+					<textarea name="dep_desc" placeholder="Ingrese la Descripción del Departamento"></textarea>
 				<center>
-					<button type="submit" id="btn_register_now" class="btn btn-waves-effect waves-light" style="text-transform: capitalize;font-weight: 500;font-size: 16px;background: #005a87"><span class="fa fa-tasks"></span>&nbsp;Add Department</button>
+					<button type="submit" id="btn_register_now" class="btn btn-waves-effect waves-light" style="text-transform: capitalize;font-weight: 500;font-size: 16px;background: #005a87"><span class="fa fa-tasks"></span>&nbsp;Crear Departamento</button>
 				</center>
 			<?= form_close(); ?>
 		</div>

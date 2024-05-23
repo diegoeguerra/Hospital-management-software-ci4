@@ -10,7 +10,7 @@ class Login_model extends Model
 		$builder->where('password', md5($password));
 
 		$result = $builder->get();
-		if (count($result->getResultArray()) == 1) {
+		if (count($result->getResultArray()) == 1) {			
 			return $result->getRowArray();
 		}else{
 			return false;

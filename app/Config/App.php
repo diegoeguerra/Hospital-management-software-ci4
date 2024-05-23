@@ -21,7 +21,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'http://localhost/HospitalSoftwareci4/';
+	public $baseURL = 'http://localhost/hospitalci4/';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -183,7 +183,8 @@ class App extends BaseConfig
 	*/
 	public $sessionDriver            = 'CodeIgniter\Session\Handlers\FileHandler';
 	public $sessionCookieName        = 'ci_session';
-	public $sessionExpiration        = 7200;
+	//public $sessionExpiration        = 7200;  2 dias
+	public $sessionExpiration        = 7200; //60 segundos
 	public $sessionSavePath          = WRITEPATH . 'session';
 	public $sessionMatchIP           = false;
 	public $sessionTimeToUpdate      = 300;

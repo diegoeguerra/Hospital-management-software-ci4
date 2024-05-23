@@ -4,6 +4,7 @@ use \App\Models\AutoModel;
 use \App\Models\Medicine_model;
 use \App\Models\AccountAutoModel;
 use \App\Models\Blogs_model;
+use \App\Controllers\Login;
 
 class Admin extends BaseController
 {	
@@ -25,15 +26,46 @@ class Admin extends BaseController
 		$this->accountent_model   = new AccountAutoModel();
 		$this->blogmodel   = new Blogs_model();
 		$this->pager       = \Config\Services::pager();
-		// $pager = \Config\Services::pager();
+		
+
 	}
+/*
+	protected function loggedIn()
+ 	{ 
+      $this->session = \Config\Services::session();
+	  echo "<br>";
+	  echo 'dentro de loggedIn';
+	  echo "<br>";
+ 
+        if(!$this->session->has('loggedin_user'))
+        {
+            
+			echo 'Session Inactiva --> logout **=>'.base_url().'/Login';
+			echo "<br>";
+			
+			redirect()->to(base_url().'/login');
+			//return redirect()->to(route_to(base_url().'/Login')); 
+			//route_to('Logout');
+			//return redirect()->to(route_to(base_url().'/Logout')); 
+			//return redirect()->to(route_to('/Logout')); 
+ 
+ 		}
+		
+ 	}
+*/
+
 	public function index()
 	{
+		
+		
 		$data = [];
+		
 		if (!(session()->has('loggedin_user'))) {
 			return redirect()->to(base_url()."/Login");
-		}else{
+	
+		}else{			
 			$uniid = session()->get('loggedin_user');
+			echo "uniid=> ".$uniid;
 			$data['userdata'] = $this->adminModel->getLoggedInAdminData($uniid);
 			$data['doctors'] = $this->adminModel->fetch_all_records('doctor');
 			$data['patents'] = $this->adminModel->fetch_all_records('patents');
@@ -89,27 +121,30 @@ class Admin extends BaseController
 				'total_appointment'         => $total_appointment ? count($total_appointment): '0'
 			];
 			//Dashboard Script Start 
+			
 			return view('Admin/dashboard',$data);
-		}
+
+		} 
 		
 	}
 
 	public function add_department(){
-		if (!(session()->has('loggedin_user'))) {
-			return redirect()->to(base_url()."/Login");
-		}else{
-			return view('Admin/department/add_department');
-		}
+		//if (!(session()->has('loggedin_user'))) {
+		//	return redirect()->to(base_url()."/Login");
+		//}else{
+			$data['validation'] = null;
+			return view('Admin/department/add_department',$data);
+		//}
 	}
 
 	public function upload_department(){
 		$data = [];
 			$data['validation'] = null;
 			if ($this->request->getMethod() == 'post') {
-				$rules = [
+				/*$rules = [
 					'department_name'      => 'required',
-				];
-				if ($this->validate($rules)) {
+				];*/
+				if ($this->validate('departamentos')) {
 					$userdata = [
 						'department_name'           =>  $this->request->getVar('department_name',FILTER_SANITIZE_STRING),
 						'dep_desc'              =>  $this->request->getVar('dep_desc'),
@@ -133,17 +168,19 @@ class Admin extends BaseController
 
 	public function manage_department(){
 		$data['department'] = $this->adminModel->fetch_all_records('department');
+		//var_dump($data);
 		return view('Admin/department/manage_department', $data);
 	}
 	public function edit_department($id){
 		$args = [
 			'id'  => $id
 		];
+		$data['validation'] = null;
 		$data['department'] = $this->adminModel->fetch_rec_by_args('department', $args);
 		return view('Admin/department/edit_department', $data);
 	}
 
-	public function update_department($id){
+	public function update_department1($id){
 		$args = [
 			'id'  => $id
 		];
@@ -155,14 +192,56 @@ class Admin extends BaseController
 			'created_at'                =>  date('Y-m-d')
 		];
 
-		$status = $this->adminModel->update_rec_by_args('department',$args, $data);
-		if ($status == true) {
-			$this->session->setTempdata('success', 'Congratulation ! Department Details Updated Successfully !', 3);
+		if ($this->validate('departamentos')) {
+			$status = $this->adminModel->update_rec_by_args('department',$args, $data);
+			if ($status == true) {
+				$this->session->setTempdata('success', 'Congratulation ! Department Details Updated Successfully !', 3);
+			}else{
+				$this->session->setTempdata('error', 'Sorry ! Unable to Update Try Again ?', 3);
+			}
+			
 		}else{
-			$this->session->setTempdata('error', 'Sorry ! Unable to Update Try Again ?', 3);
+			$data['validation'] = $this->validator;
 		}
-       return redirect()->to(base_url().'/Admin/edit_department/'.$id);
+		return redirect()->to(base_url().'/Admin/edit_department/'.$id);
+		//return view('Admin/department/edit_department', $data);
 	}
+// ********************************************************************************************
+		public function update_department($id)
+		{
+			$args = [
+				'id'  => $id
+			];			
+	
+			$data = [
+				'department_name'           =>  $this->request->getVar('department_name',FILTER_SANITIZE_STRING),
+				'dep_desc'                  =>  $this->request->getVar('dep_desc'),
+				'status'                    => 'Active', 
+				'created_at'                =>  date('Y-m-d')
+			];
+
+			$adminmodel = new Admin_Model();
+
+			if ($this->validate('departamentos')) {				
+				$status = $adminmodel->update_rec_by_args('department',$args, $data);
+
+				if ($status == true) {
+					$this->session->setTempdata('success', 'Departamento Actualizado Satisfactoriamente !', 3);
+				}else{
+					$this->session->setTempdata('error', ' Error al actualizar datos, inténtalo de nuevo?', 3);
+				}
+
+			} else {				
+				session()->setFlashdata([ 'validation' => $this->validator ]);
+				return redirect()->back()->withInput();
+			}
+
+			return redirect()->to(base_url().'/Admin/edit_department/'.$id);			
+		}
+
+// ********************************************************************************************
+
+
 
 	public function delete_department($id){
 		$args = [

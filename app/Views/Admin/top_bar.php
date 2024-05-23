@@ -45,7 +45,7 @@
       <div>
         <div class="nav-wrapper">
           <!-- <a href="#!" class="brand-logo">TravelVille</a> -->
-           <a href="<?= base_url('Admin/index'); ?>" class="brand-logo">&nbsp;<?= $userdata->username; ?> Admin</a>
+           <a href="<?= base_url('Admin/index'); ?>" class="brand-logo">&nbsp;<?= session('loggedin_username') ?> Admin</a>
           <a href="#" data-target="side_menu" class="sidenav-trigger"><span class="fa fa-bars"></span>&nbsp;Menu</a>
            <ul class="right hide-on-med-and-down">
            

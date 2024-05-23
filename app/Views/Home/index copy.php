@@ -12,47 +12,40 @@
 <?= view('Home/nav_bar'); ?> 
 <!---Nav Bar Section Include  ---> 
 
-
-  <!--=========== BEGIN Top Feature SECTION ================-->
-  <!-- este es el del problema -->
-  <!--?= view('Home/top_feature_section'); ?-->
-    <!--=========== END Top Feature SECTION ================-->
-
-
-     <!--=========== BEGIN SLIDER SECTION ================-->
-     <?= view('Home/slider_section'); ?>
+    <!--=========== BEGIN SLIDER SECTION ================-->
+    <?= view('Home/slider_section'); ?>
     <!--=========== END SLIDER SECTION ================-->
 
-   <!--=========== BEGIN Service SECTION ================-->
-   <?= view('Home/front_service_section'); ?>
+    <!--=========== BEGIN Top Feature SECTION ================-->
+    <?= view('Home/top_feature_section'); ?>
+    <!--=========== END Top Feature SECTION ================-->
+
+    <!--=========== BEGIN Service SECTION ================-->
+    <?= view('Home/front_service_section'); ?>
     <!--=========== End Service SECTION ================-->
 
-
-   <!--=========== BEGAIN Why Choose Us SECTION ================-->
-   <?= view('Home/why_choose_us'); ?>
+    <!--=========== BEGAIN Why Choose Us SECTION ================-->
+    <?= view('Home/why_choose_us'); ?>
     <!--=========== END Why Choose Us SECTION ================-->
-
 
     <!--=========== BEGAIN Counter SECTION ================-->
     <?= view('Home/counter_section'); ?>
     <!--=========== End Counter SECTION ================-->
 
-
-  <!--=========== BEGAIN Doctors SECTION ================-->
-  <?= view('Home/doctor_section'); ?>
+    <!--=========== BEGAIN Doctors SECTION ================-->
+    <?= view('Home/doctor_section'); ?>
     <!--=========== End Doctors SECTION ================-->
 
-
- <!--=========== BEGAIN Testimonial SECTION ================-->
- <?= view('Home/testimonial_section'); ?>
+    <!--=========== BEGAIN Testimonial SECTION ================-->
+   <?= view('Home/testimonial_section'); ?>
     <!--=========== End Testimonial SECTION ================-->
 
- <!--=========== BEGAIN Home Blog SECTION ================-->
- <?= view('Home/home_blog_section'); ?>
+    <!--=========== BEGAIN Home Blog SECTION ================-->
+    <?= view('Home/home_blog_section'); ?>
     <!--=========== End Home Blog SECTION ================-->
 
     <!--=========== Start Footer SECTION ================-->
-    <?= view('Home/footer_section'); ?>
+   <?= view('Home/footer_section'); ?>
     <!--=========== End Footer SECTION ================-->
 
 <!----Js  file Include --->

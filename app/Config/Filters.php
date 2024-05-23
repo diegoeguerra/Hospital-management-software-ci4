@@ -13,6 +13,7 @@ class Filters extends BaseConfig
 		// 'isLoggedIn'   => \App\Filters\LoginFilter::class,
 		'ipBlocker'    => \App\Filters\IPBlockerFilter::class,
 		'ipBlockerAcc' => \App\Filters\IPBlockerAccountent::class,
+		'AlreadyLoggedIn' => \App\Filters\AuthCheckFilter::class,
 	];
 
 	// Always applied before every request
@@ -38,5 +39,6 @@ class Filters extends BaseConfig
 	public $filters = [
 		'ipBlocker'     => ['before'=>['Login']],
 		'ipBlockerAcc'  => ['before'=>['Accountent_login/accountent_login']],
+		'AlreadyLoggedIn' => ['before'=>['Admin','Admin/*']],
 	];
 }

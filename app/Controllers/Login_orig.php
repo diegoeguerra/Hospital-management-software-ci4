@@ -1,5 +1,7 @@
 <?php 
 namespace App\Controllers;
+
+use App\Libraries\LAyuda;
 use CodeIgniter\Controller;	
 use \App\Models\Login_model;
 use \App\Models\Admin_Model;
@@ -14,90 +16,89 @@ use \App\Models\Admin_Model;
 			$this->loginModel = new Login_model();
 			$this->session   = session();
 			$this->email = \Config\Services::email();
-			$this->adminModel = new Admin_Model();
-
-			
+			$this->adminModel = new Admin_Model();			
 			
 		}
 
-		public function index(){
-			$data = [];
-			$data['validation']  = $this->validator;
-			//site login 
-			if ($this->request->getMethod() == 'post') {
-				echo "METHOD=POST";
-				$rules = [
-					'email'  => 'required|valid_email',
-					'password'   => 'required|min_length[4]|max_length[16]'
-				];
-				if ($this->validate($rules)) {
-					$email     = $this->request->getVar('email');
-					$password  = $this->request->getVar('password');
-					
-					$throttler = \Config\Services::throttler();
-					$allow     = $throttler->check("login", 100, MINUTE);
-					if ($allow) {
-						$userdata = $this->loginModel->verifyEmail($email, $password);											
-						echo $userdata['status'];
-						if ($userdata['status'] == 'Active') {
-							if ($userdata['level'] === '1') {
-								$loginInfo  = [
-									'uniid'       => $userdata['uid'],
-									'level'       => $userdata['level'],
-									'browser'     => $this->getUserAgent(),
-									'ip'          => $this->request->getIPAddress(),
-									'login_time'  => date('Y-m-d h:i:s'),
-									'login_date'  => date('Y-m-d')   
-								];
-								$login_activity_id = $this->loginModel->saveLoginInfo($loginInfo);
-								if ($login_activity_id) {
-									$this->session->set('loggedin_info', $login_activity_id);
-								}else{
-
-								}
-								$this->session->set('loggedin_user_all',$userdata); 
-								$this->session->set('loggedin_user', $userdata['uid']);
-								$this->session->set('loggedin_username', $userdata['username']);
-
-								return redirect()->to(base_url().'/Admin');
-							}
-							else{
-								$data['error']  = 'Email & password do Not Matched  Invalid';
-							}
-						}else{
-							$data['error']  = 'Your Account is Bloked by Admin Please Contect Admin';
-						}
-
-
-
-					}else{
-						$data['error']  = 'Max No. of failed Login Attempt, Try Again a Few Minutes';
-					}
-				}else{
-					
-					$data['validation']  = $this->validator;
-				}
-				//var_dump($data);
-			}
-			/*else
-			{
-				echo "METHOD=GET ==>" . md5('admin')."====> ".md5(str_shuffle('abcdefghizklmnopqrstuvwxyz'.time()));
+	public function index(){
+		$data = [];
+		$data['validation']  = $this->validator;
+		//site login 
+		if ($this->request->getMethod() == 'post') {
+			//echo "METHOD=POST";
+			$rules = [
+				'email'      => 'required|valid_email',
+				'password'   => 'required|min_length[4]|max_length[16]'
+			];
+			if ($this->validate($rules)) {
+				$email     = $this->request->getVar('email');
+				$password  = $this->request->getVar('password');
 				
-			}		
-			*/
-			//Google Gmail Login Query Software Developer Khan Rayees			
-			return view('Login/index', $data);
-		}
+				$throttler = \Config\Services::throttler();
+				$allow     = $throttler->check("login", 100, MINUTE);
+				if ($allow) {
+					$userdata = $this->loginModel->verifyEmail($email, $password);					
+					
+					var_dump($userdata['status']);
+					
+					if ($userdata['status'] == 'Active') {
+					/*
+						if ($userdata['level'] === '1') {
+							$loginInfo  = [
+								'uniid'       => $userdata['uid'],
+								'level'       => $userdata['level'],
+								'browser'     => $this->getUserAgent(),
+								'ip'          => $this->request->getIPAddress(),
+								'login_time'  => date('Y-m-d h:i:s'),
+								'login_date'  => date('Y-m-d')   
+							];
+							$login_activity_id = $this->loginModel->saveLoginInfo($loginInfo);
+							if ($login_activity_id) {
+								$this->session->set('loggedin_info', $login_activity_id);
+							}else{
 
+							}
+							$this->session->set('loggedin_user_all', $userdata);
+							$this->session->set('loggedin_user', $userdata['uid']);
+							$this->session->set('loggedin_username', $userdata['username']);
+							return redirect()->to(base_url().'/Admin');
+						}
+						else{
+							$data['error']  = 'Email & password do Not Matched  Invalid';
+						}
+						*/
+					}else{
+						$data['error']  = 'Your Account is Bloked by Admin Please Contect Admin';
+					}
+							
+				}else{
+					$data['error']  = 'Max No. of failed Login Attempt, Try Again a Few Minutes';
+				}
 
-		public function create_doctor(){
-			if (!(session()->has('loggedin_user'))) {
-				return redirect()->to(base_url()."/Login");
 			}else{
-				$data['doctor'] = $this->adminModel->fetch_all_records('doctor');
-				return view('Admin/Account/create_doctor', $data);
+				
+				$data['validation']  = $this->validator;
 			}
+			//var_dump($data);
 		}
+		//else
+		//{
+		//	echo "METHOD=GET ==>" . md5('admin')."====> ".md5(str_shuffle('abcdefghizklmnopqrstuvwxyz'.time()));
+			
+		//}		
+		//Google Gmail Login Query Software Developer Khan Rayees			
+		return view('Login/index', $data);
+	}
+
+
+	public function create_doctor(){
+		if (!(session()->has('loggedin_user'))) {
+			return redirect()->to(base_url()."/Login");
+		}else{
+			$data['doctor'] = $this->adminModel->fetch_all_records('doctor');
+			return view('Admin/Account/create_doctor', $data);
+		}
+	}
 
 
 	public function get_doctor_data($id){
@@ -369,12 +370,40 @@ use \App\Models\Admin_Model;
 			$login_activity_id = session()->get('loggedin_info');
 			$this->loginModel->updateLogoutTime($login_activity_id);
 		}
+		echo "<br>";
+		echo "dentro de logut";
+		echo "<br>";
 		session()->remove('google_user');
+		session()->remove('loggedin_user');
 		session()->destroy();
+		echo "dentro de lout redireccionando";
 		return redirect()->to(base_url()."/Login");
+		//return redirect()->to(route_to('usuario.login'));   
+		//return redirect()->to('Login");
+		//route_to('login');
 	}
 
-		
+	
+	public function f_valida_session_activa()
+    {
+        $layuda = new LAyuda();
+        
+        $layuda->imprime_msg_web('mensaje','Validando session *********' );
+        
+        if (!(session()->has('loggedin_user_all'))) {
+			$layuda->imprime_msg_web('mensaje','Session Inactiva --> logout **=>'.base_url().'/Logout' );
+
+            //$this->Logout();
+			return redirect()->to(base_url()."Logout");
+            //return redirect()->to(route_to('Logout')); 
+			//return redirect()->to(route_to(base_url().'/Logout')); 
+		}else
+        {
+
+			$layuda->imprime_msg_web('mensaje','Session Activa [ok]' );
+         }
+        
+      }
 
 
 
